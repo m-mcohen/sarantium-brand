@@ -1,0 +1,140 @@
+/*
+ * @sarantium/brand - tokens.css
+ * Canonical Sarantium design tokens for Tailwind v4 consumers.
+ * Single source of truth shared by sarantium-site, 5-day-close, card-scanner.
+ *
+ * Usage (in each app's globals.css, AFTER importing tailwind):
+ *   @import "tailwindcss";
+ *   @import "@sarantium/brand/tokens.css";
+ *
+ * The @theme block registers color + font utilities (bg-ground, text-gold,
+ * border-border, font-display, ...). The :root block exposes the extended
+ * design tokens (type scale, spacing, motion, layout, textures) plus
+ * back-compat aliases for direct var() use.
+ *
+ * Fonts: the --font-* tokens reference a CSS var the app must define via
+ * next/font/google, e.g.
+ *   const cinzel = Cinzel({ subsets: ["latin"], variable: "--font-cinzel" });
+ * then put cinzel.variable on <html>. The fallback chain also accepts the
+ * "*-google" names sarantium-site already uses, so no rename is forced.
+ *
+ * Palette: Loop 2 cool register, LOCKED 2026-05-27 (sarantium-site).
+ */
+
+@theme {
+  /* ===== Palette (generates bg-* / text-* / border-* utilities) ===== */
+  --color-ground:       #F5F0E8;  /* champagne page ground */
+  --color-surface:      #FCFAEE;  /* elevated card */
+  --color-elevated:     #EBE6DC;  /* quote / callout */
+  --color-soft:         #D8D2CA;  /* secondary fill */
+  --color-ink:          #15161A;  /* primary text / dark surfaces (cool) */
+  --color-body:         #3A3A3F;  /* body copy */
+  --color-muted:        #5C5C60;  /* eyebrows, captions */
+  --color-border:       #888B8E;  /* cool slate hairline */
+  --color-bronze:       #7A4E14;  /* antique bronze - strong rule / emphasis */
+  --color-gold:         #C47A3A;  /* primary accent (mosaic gold) */
+  --color-gold-line:    #D69846;  /* 1px gold lines */
+  --color-gold-deep:    #9C5018;  /* deep gold - links, emphasis */
+  --color-wine:         #6E1F2A;  /* numerals / emphasis */
+  --color-wine-line:    #8A2B36;  /* bright wine line */
+  --color-wine-deep:    #5E1A24;  /* medium step from wine */
+  --color-tile-1:       #E0DDD0;  /* mosaic tesserae - lightest */
+  --color-tile-2:       #C0BFB2;
+  --color-tile-3:       #94978D;
+  --color-tile-4:       #4F5249;  /* mosaic tesserae - darkest */
+  --color-success:      #3F6B4A;  /* restrained success green - confirmations only */
+  --color-success-line: #5E8A66;
+  --color-success-bg:   #E8EEE4;
+
+  /* ===== Type families (generates font-display / font-body / font-mono) ===== */
+  --font-display: var(--font-cinzel-google, var(--font-cinzel, "Cinzel")), Georgia, serif;
+  --font-body:    var(--font-crimson-pro-google, var(--font-crimson, "Crimson Pro")), Georgia, serif;
+  --font-mono:    var(--font-jetbrains-mono-google, var(--font-jetbrains, "JetBrains Mono")), ui-monospace, monospace;
+}
+
+:root {
+  /* ===== Back-compat color aliases (names already used across the repos) ===== */
+  --bg:             var(--color-ground);
+  --champagne:      var(--color-ground);
+  --paper:          var(--color-ground);
+  --ground:         var(--color-ground);
+  --surface:        var(--color-surface);
+  --elevated:       var(--color-elevated);
+  --soft:           var(--color-soft);
+  --text:           var(--color-ink);
+  --ink:            var(--color-ink);
+  --text-2:         var(--color-body);
+  --walnut:         var(--color-body);
+  --muted:          var(--color-muted);
+  --stone:          var(--color-muted);
+  --border:         var(--color-border);
+  --hair:           var(--color-border);
+  --parchment:      var(--color-border);
+  --rule:           var(--color-bronze);
+  --antique-bronze: var(--color-bronze);
+  --gold:           var(--color-gold);
+  --mosaic-gold:    var(--color-gold);
+  --gold-line:      var(--color-gold-line);
+  --gold-deep:      var(--color-gold-deep);
+  --wine:           var(--color-wine);
+  --wine-line:      var(--color-wine-line);
+  --wine-deep:      var(--color-wine-deep);
+
+  /* ===== Type scale ===== */
+  --fs-display:   clamp(40px, 6vw, 72px);
+  --fs-h1:        42px;
+  --fs-h1-detail: 38px;
+  --fs-h2:        28px;
+  --fs-h3:        22px;
+  --fs-pull:      24px;
+  --fs-body:      15px;
+  --fs-body-lg:   17px;
+  --fs-stat:      38px;
+  --fs-eyebrow:   10px;
+  --fs-caption:   11px;
+
+  --lh-display: 0.88;
+  --lh-h1:      1.1;
+  --lh-h2:      1.15;
+  --lh-h3:      1.25;
+  --lh-pull:    1.4;
+  --lh-body:    1.85;
+
+  --ls-display:  -0.01em;
+  --ls-wordmark:  0.08em;
+  --ls-eyebrow:   0.20em;
+
+  /* ===== Spacing scale (4 8 12 16 24 32 48 64 96) ===== */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  /* ===== Radius (sharp corners are a brand invariant) ===== */
+  --radius: 0;
+
+  /* ===== Motion (D12 editorial restraint - 150ms, sharp-out) ===== */
+  --m-duration-base:  150ms;
+  --m-duration-large: 220ms;
+  --m-duration-fade:  180ms;
+  --m-easing:         cubic-bezier(0.2, 0, 0, 1);
+
+  /* ===== Layout ===== */
+  --header-h:         64px;
+  --max-content:      1080px;
+  --measure-prose:    65ch;
+  --marginalia-width: 220px;
+  --marginalia-gap:   32px;
+
+  /* ===== Brand textures ===== */
+  /* Paper grain: fractal-noise SVG baked at 22% alpha (multiply on ground). */
+  --paper-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='4'/><feColorMatrix values='0 0 0 0 0.55  0 0 0 0 0.42  0 0 0 0 0.22  0 0 0 0.22 0'/></filter><rect width='200' height='200' filter='url(%23g)'/></svg>");
+  --paper-grain-size: 240px 240px;
+  /* Byzantine tesserae texture for .ink-surface overlays at ~6% opacity. */
+  --texture-byzantine: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><rect x='1' y='1' width='12' height='6' fill='%23C47A3A'/><rect x='15' y='1' width='12' height='6' fill='%237A4E14'/><rect x='1' y='9' width='8' height='6' fill='%23D4A06A'/><rect x='11' y='9' width='6' height='6' fill='%23A86628'/><rect x='19' y='9' width='8' height='6' fill='%237A4E14'/><rect x='1' y='17' width='10' height='6' fill='%23A86628'/><rect x='13' y='17' width='14' height='6' fill='%23C47A3A'/></svg>");
+}
