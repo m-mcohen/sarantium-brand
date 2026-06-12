@@ -53,34 +53,292 @@
 }
 
 :root {
-  /* ===== Back-compat color aliases (names already used across the repos) ===== */
-  --bg:             var(--color-ground);
-  --champagne:      var(--color-ground);
-  --paper:          var(--color-ground);
-  --ground:         var(--color-ground);
-  --surface:        var(--color-surface);
-  --elevated:       var(--color-elevated);
-  --soft:           var(--color-soft);
-  --text:           var(--color-ink);
-  --ink:            var(--color-ink);
-  --text-2:         var(--color-body);
-  --walnut:         var(--color-body);
-  --muted:          var(--color-muted);
-  --stone:          var(--color-muted);
-  --border:         var(--color-border);
-  --hair:           var(--color-border);
-  --parchment:      var(--color-border);
-  --rule:           var(--color-bronze);
-  --antique-bronze: var(--color-bronze);
-  --gold:           var(--color-gold);
-  --mosaic-gold:    var(--color-gold);
-  --gold-line:      var(--color-gold-line);
-  --gold-deep:      var(--color-gold-deep);
-  --wine:           var(--color-wine);
-  --wine-line:      var(--color-wine-line);
-  --wine-deep:      var(--color-wine-deep);
+  /* ═══════════════════════════════════════════════════════════════════
+     SARANTIUM REDESIGN — Loop 2 + Loop 4 + Loop 5 canonical tokens
+     ───────────────────────────────────────────────────────────────────
+     Source of truth: docs/redesign-options/decisions.md
+     Visual reference: docs/redesign-options/mockups/decision-02--cohesion-check.html
 
-  /* ===== Type scale ===== */
+     Phase 1 (this commit): tokens declared at :root only. Existing
+     production component CSS still references the legacy aliases below
+     (--champagne, --ink, --font-playfair, --font-sans, etc.), which now
+     resolve through var() to these canonical tokens. Phase 2 migrates
+     component CSS to use the canonical names directly; Phase 3 refactors
+     pages one-by-one; Phase 4 verifies motion against the live app.
+
+     Banked alternates per decision entry. Swaps are token-level edits.
+     ═══════════════════════════════════════════════════════════════════ */
+
+  /* ─── Loop 1 · Surface (D01 — paper grain + mosaic watermark) ────── */
+  /* Paper grain — fractal noise SVG, baked at 22% alpha via feColorMatrix.
+     Applied to body in the base rules below. */
+  --paper-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='4'/><feColorMatrix values='0 0 0 0 0.55  0 0 0 0 0.42  0 0 0 0 0.22  0 0 0 0.22 0'/></filter><rect width='200' height='200' filter='url(%23g)'/></svg>");
+  --paper-grain-size: 240px 240px;
+
+  /* Watermark geometry — mosaic-in-creation SVG anchored top-right.
+     Asset re-tint to Range C CSS-classed fills is a queued follow-up;
+     for Phase 2 we use the existing /assets/mosaic-watermark.svg as-is. */
+  --watermark-w:        clamp(520px, 92vw, 1320px);
+  --watermark-aspect:   15 / 8;
+  --watermark-max-h:    75vh;
+  --watermark-opacity:  0.30;
+
+  /* ─── Loop 2 · Color tokens T1–T20 (LOCKED 2026-05-27) ───────────── */
+  --bg:                  #F5F0E8;   /* T1   Champagne ground */
+  --text:                #15161A;   /* T2   cool ink primary (re-locked: was warm) */
+  --text-2:              #3A3A3F;   /* T3   close-to-ink, body */
+  --muted:               #5C5C60;   /* T4   cool muted */
+  --surface:             #FCFAEE;   /* T5   rise card */
+  --elevated:            #EBE6DC;   /* T6   cool-shifted cream (round-2 re-lock) */
+  --soft:                #D8D2CA;   /* T7   pale stone (round-2 re-lock) */
+  --border:              #888B8E;   /* T8   cool slate hairline */
+  --border-strong:       #7A4E14;   /* T9   Antique Bronze emphasis */
+  --gold:                #C47A3A;   /* T10  Mosaic Gold main */
+  --gold-line:           #D69846;   /* T11  bright gold for 1px lines */
+  --gold-deep:           #9C5018;   /* T12  Brick — red-leaning */
+  --gold-band:           color-mix(in oklab, var(--gold-line) 15%, transparent);  /* T13 */
+  --wine:                #6E1F2A;   /* T14  baseline wine */
+  --wine-line:           #8A2B36;   /* T15  bright wine line */
+  --wine-deep:           #5E1A24;   /* T16  medium step from wine */
+  --wine-band:           var(--gold-band);                                          /* T17 */
+  --tile-1:              #E0DDD0;   /* T18.C-a Range C lightest tesserae */
+  --tile-2:              #C0BFB2;   /* T18.C-b */
+  --tile-3:              #94978D;   /* T18.C-c */
+  --tile-4:              #4F5249;   /* T18.C-d Range C darkest */
+  --tile-emphasis-1:     #D69846;   /* T18.E-a Range E loud — case-study covers only */
+  --tile-emphasis-2:     #C47A3A;   /* T18.E-b */
+  --tile-emphasis-3:     #8A2B36;   /* T18.E-c */
+  --tile-emphasis-4:     #4A1219;   /* T18.E-d */
+  --ink-band-bg:         var(--text);  /* T19  ink-band surface (topbar, footer) */
+  --ink-band-fg:         var(--bg);    /* T20  ink-band foreground (wordmark, headline) */
+
+  /* ─── Loop 3 · Type stack (LOCKED 2026-05-27) ────────────────────── */
+  /* Cinzel display (Roman caps, no italic, no lowercase glyphs).
+     Crimson Pro body (Renaissance, italic-preserved).
+     JetBrains Mono (grotesque mono — eyebrows, code, table numerics).
+     Primitives load via next/font/google in app/layout.tsx. */
+  --font-display:        var(--font-cinzel-google),         Georgia, serif;
+  --font-body:           var(--font-crimson-pro-google),    Georgia, serif;
+  --font-mono:           var(--font-jetbrains-mono-google), 'Consolas', monospace;
+
+  /* ─── Loop 4 · Component vocabulary (LOCKED 2026-05-28) ──────────── */
+
+  /* D04 — Editorial-inline button system */
+  --btn-primary-bg:                  transparent;
+  --btn-primary-fg:                  var(--gold-deep);
+  --btn-primary-underline:           2px solid var(--gold-line);
+  --btn-primary-glyph:               ' →';
+  --btn-primary-glyph-color:         var(--gold);
+  --btn-primary-font:                var(--font-display);
+  --btn-primary-weight:              600;
+  --btn-primary-letter:              0.16em;
+  --btn-ghost-bg:                    transparent;
+  --btn-ghost-fg:                    var(--text);
+  --btn-ghost-underline:             1px solid var(--border);
+  --btn-ghost-glyph:                 ' →';
+  --btn-ghost-glyph-color:           var(--muted);
+  --btn-ghost-font:                  var(--font-display);
+  --btn-ghost-weight:                600;
+  --btn-ghost-letter:                0.16em;
+  --btn-tertiary-bg:                 transparent;
+  --btn-tertiary-fg:                 var(--text-2);
+  --btn-tertiary-glyph:              ' ↗';
+  --btn-tertiary-glyph-color:        var(--gold);
+  --btn-tertiary-font:               var(--font-mono);
+  /* D04 banked: letterpress (Cinzel small-caps stamps, swap if conversion drops) */
+  --btn-primary-alt-letterpress-bg:   var(--text);
+  --btn-primary-alt-letterpress-fg:   var(--bg);
+  --btn-ghost-alt-letterpress-bg:     var(--tile-1);
+  --btn-ghost-alt-letterpress-fg:     var(--text);
+  --btn-alt-letterpress-font:         var(--font-display);
+  --btn-alt-letterpress-letter:       0.18em;
+
+  /* D05 — Inline body link (gold-deep + 1px gold-line underline) */
+  --link-fg:                         var(--gold-deep);
+  --link-underline:                  1px solid var(--gold-line);
+  --link-underline-offset:           3px;
+  --link-hover-fg:                   var(--text);
+  --link-hover-underline:            1px solid var(--text);
+  /* D05 banked alternates */
+  --link-alt-dotted-style:           underline dotted;
+  --link-alt-dotted-color:           var(--gold-line);
+  --link-alt-arrow-glyph:            ' →';
+  --link-alt-arrow-color:            var(--gold);
+
+  /* D06 — Form input system (underline-only fields) */
+  --input-bg:                        transparent;
+  --input-fg:                        var(--text);
+  --input-border-b:                  1px solid var(--border);
+  --input-border-b-focus:            2px solid var(--gold);
+  --input-padding-y:                 8px 0 10px;
+  --input-padding-x:                 0;
+  --input-font:                      var(--font-body);
+  --input-size:                      16px;
+  --input-placeholder:               var(--muted);
+  /* D06 banked: elevated-surface fields */
+  --input-alt-elevated-bg:           var(--elevated);
+  --input-alt-elevated-bg-focus:     var(--surface);
+  --input-alt-elevated-border-b:     none;
+  --input-alt-elevated-border-b-focus: 2px solid var(--gold);
+  --input-alt-elevated-padding:      12px 14px;
+
+  /* D07 — Hairline-ledger table system */
+  --table-font:                      var(--font-body);
+  --table-size:                      13.5px;
+  --table-cell-pad-y:                10px;
+  --table-cell-pad-x:                12px;
+  --table-header-font:               var(--font-mono);
+  --table-header-size:               10px;
+  --table-header-letter:             0.18em;
+  --table-header-weight:             500;
+  --table-header-color:              var(--muted);
+  --table-header-rule:               1px solid var(--text);
+  --table-header-pad-bottom:         12px;
+  --table-row-rule:                  1px solid var(--border);
+  --table-num-font:                  var(--font-mono);
+  --table-num-color:                 var(--text);
+  --table-num-size:                  11.5px;
+  --table-row-selected-bg:           var(--gold-band);
+  --table-row-selected-rule:         2px solid var(--gold);
+  /* D07 banked: rule-light editorial (footnote-table-in-an-essay) */
+  --table-alt-editorial-row-rule:        none;
+  --table-alt-editorial-cell-pad-y:      14px;
+  --table-alt-editorial-bracket-top:     1px solid var(--text);
+  --table-alt-editorial-bracket-bottom:  1px solid var(--text);
+
+  /* D08 — Card system (tessera-band tune; gold-band fill on featured) */
+  --card-bg:                         var(--surface);
+  --card-border:                     1px solid var(--border);
+  --card-pad-y:                      22px;
+  --card-pad-x:                      20px;
+  --card-hover-border-top:           2px solid var(--gold-line);
+  --card-hover-pad-top-comp:         1px;
+  --card-hover-more-rule:            1px solid var(--gold-line);
+  --card-focus-outline:              2px solid var(--gold-deep);
+  --card-focus-outline-offset:       4px;
+  --card-featured-bg:                var(--gold-band);
+  --card-featured-border:            1px solid var(--gold-line);
+  --card-featured-border-top:        2px solid var(--gold);
+  --card-featured-pad-top-comp:      1px;
+  /* D08 banked: letterpress lineage (no fill on featured) */
+  --card-alt-letterpress-featured-bg:         var(--surface);
+  --card-alt-letterpress-featured-border:     1px solid var(--border);
+  --card-alt-letterpress-featured-border-top: 3px solid var(--text);
+  --card-alt-letterpress-featured-eye-color:  var(--gold-deep);
+  /* D08 banked: hairline-only spare (transparent cards) */
+  --card-alt-spare-bg:               transparent;
+  --card-alt-spare-hover-border:     1px solid var(--text);
+  --card-alt-spare-focus-rule:       2px solid var(--gold);
+
+  /* D09 — Section-divider rhythm (whitespace + marker only) */
+  --section-pad-y:                   clamp(2.5rem, 5vw, 4rem);
+  --section-rule:                    none;
+  /* D09 banked: container hairline + tiered band */
+  --section-alt-rule:                1px solid var(--border);
+  --section-alt-tiered-major-bg:     var(--elevated);
+  --section-alt-tiered-major-pad-y:  clamp(3rem, 6vw, 4.5rem);
+
+  /* D10 — Nav states (brick-text current; gold-line hover underline) */
+  --nav-link-fg:                     var(--soft);
+  --nav-link-hover-fg:               var(--ink-band-fg);
+  --nav-link-hover-rule:             1px solid var(--gold-line);
+  --nav-link-current-fg:             var(--gold-line);
+  --nav-link-focus-outline:          1px solid var(--gold-deep);
+  --nav-link-focus-offset:           2px;
+  --nav-link-font:                   var(--font-mono);
+  --nav-link-size:                   0.75rem;
+  --nav-link-letter:                 0.08em;
+  --nav-link-pad-y:                  2px;
+  /* D10 banked: bracketed-item current marker */
+  --nav-link-alt-bracket-before-content: '[ ';
+  --nav-link-alt-bracket-after-content:  ' ]';
+  --nav-link-alt-bracket-color:          var(--gold-line);
+  --nav-link-alt-bracket-current-fg:     var(--ink-band-fg);
+
+  /* D11 — Section-marker glyph (universal 3×3 tesserae) */
+  --marker-glyph-size:               22px;
+  --marker-glyph-gap:                0.75rem;
+  --marker-glyph-tile-a:             var(--tile-3);
+  --marker-glyph-tile-b:             var(--tile-2);
+  --marker-glyph-tile-c:             var(--gold);
+  --marker-glyph-tile-d:             var(--tile-1);
+  --marker-glyph-tile-e:             var(--wine);
+  --marker-glyph-tile-f:             var(--text);
+  --marker-glyph-tile-g:             var(--tile-4);
+  --marker-glyph-tile-h:             var(--tile-3);
+  --marker-glyph-tile-i:             var(--tile-2);
+  /* D11 banked: single-accent-tile pivots per section role */
+  --marker-alt-accent-practice:      var(--gold);
+  --marker-alt-accent-case:          var(--wine);
+  --marker-alt-accent-notebook:      var(--text);
+
+  /* ─── Loop 5 · Motion language (D12 + D13 design intent) ──────────
+     Feel verified in production (Phase 4). Banked B (cinematic weight)
+     + C (mechanical precision) tokens preserved for one-line swap. */
+
+  /* D12 — Editorial restraint (150ms · sharp-out · no scroll reveals) */
+  --m-duration-base:                 150ms;
+  --m-duration-large:                220ms;
+  --m-duration-fade:                 180ms;
+  --m-easing:                        cubic-bezier(0.2, 0, 0, 1);
+  --m-transform-nudge:               4px;
+  --m-transform-lift:                0;
+  /* D12 banked: B — cinematic weight */
+  --m-alt-cinematic-duration-base:   280ms;
+  --m-alt-cinematic-duration-large:  420ms;
+  --m-alt-cinematic-easing:          cubic-bezier(0.32, 0.72, 0, 1);
+  --m-alt-cinematic-transform-lift:  -2px;
+  --m-alt-cinematic-page-fade:       320ms;
+  /* D12 banked: C — mechanical precision */
+  --m-alt-mechanical-duration-base:  90ms;
+  --m-alt-mechanical-duration-large: 120ms;
+  --m-alt-mechanical-easing:         linear;
+
+  /* D13 — Hover micro-animations (refined transforms) */
+  --hover-link-color:                var(--text);
+  --hover-link-underline-color:      var(--text);
+  --hover-link-underline-thickness:  2px;
+  --hover-btn-arrow-translate:       4px;
+  --hover-card-read-more-border:     1px solid var(--gold-line);
+  --hover-table-row-bg:              color-mix(in oklab, var(--gold-line) 6%, transparent);
+  --hover-input-border-color:        var(--text);
+
+  /* ═══════════════════════════════════════════════════════════════════
+     LEGACY PRODUCTION ALIASES (Phase 1 remap)
+     ───────────────────────────────────────────────────────────────────
+     Existing component CSS, Header.tsx, Footer.tsx, page.tsx all read
+     these names. Each one now resolves through var() to a canonical
+     redesign token above. Visible deltas after this remap:
+       --ink            → cool #15161A (was warm #2D2016)   · BODY INK SHIFT
+       --walnut         → cool #3A3A3F (was warm #6B5440)
+       --stone          → cool #5C5C60 (was warm #9A8570)
+       --parchment      → cool #888B8E slate (was #DDD5C0)
+       --font-sans      → Crimson Pro (was DM Sans)          · BODY FONT SHIFT
+       --font-playfair  → Cinzel (was Playfair Display)      · HEADLINE FONT SHIFT
+     Phase 2 migrates components off these aliases entirely.
+     ═══════════════════════════════════════════════════════════════════ */
+
+  /* === Primary palette (REMAPPED to canonical D02 tokens) === */
+  --champagne:      var(--bg);              /* T1   no-op same value */
+  --mosaic-gold:    var(--gold);            /* T10  no-op same value */
+  --antique-bronze: var(--border-strong);   /* T9   no-op same value */
+  --ink:            var(--text);            /* T2   COOL INK SHIFT */
+
+  /* === Extended palette (REMAPPED) === */
+  --walnut:    var(--text-2);   /* body text now cool */
+  --stone:     var(--muted);    /* labels now cool */
+  --parchment: var(--border);   /* card borders now cool slate */
+
+  /* === Font compositions (REMAPPED to D03 type stack) ===
+     Primitives load via next/font/google in app/layout.tsx as
+     --font-cinzel-google / --font-crimson-pro-google / --font-jetbrains-mono-google. */
+  --font-cinzel:   var(--font-display);     /* no-op — Cinzel always */
+  --font-playfair: var(--font-display);     /* HEADLINES NOW CINZEL */
+  --font-sans:     var(--font-body);        /* BODY NOW CRIMSON PRO */
+
+  /* === Type scale ===
+     --fs-display uses clamp() rather than the brand book's hardcoded 72px
+     so the hero doesn't wrap at 375px. Upper bound honors the brand book. */
   --fs-display:   clamp(40px, 6vw, 72px);
   --fs-h1:        42px;
   --fs-h1-detail: 38px;
@@ -104,7 +362,7 @@
   --ls-wordmark:  0.08em;
   --ls-eyebrow:   0.20em;
 
-  /* ===== Spacing scale (4 8 12 16 24 32 48 64 96) ===== */
+  /* === Spacing scale === */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -115,26 +373,94 @@
   --space-8: 64px;
   --space-9: 96px;
 
-  /* ===== Radius (sharp corners are a brand invariant) ===== */
-  --radius: 0;
+  /* === Component tokens === */
+  --rule-amber-width:  44px;
+  --rule-amber-height: 1px;
+  --border-card:    1px solid var(--parchment);
+  --border-card-hv: 1px solid var(--ink);
+  --max-content:    1080px;
 
-  /* ===== Motion (D12 editorial restraint - 150ms, sharp-out) ===== */
-  --m-duration-base:  150ms;
-  --m-duration-large: 220ms;
-  --m-duration-fade:  180ms;
-  --m-easing:         cubic-bezier(0.2, 0, 0, 1);
+  /* === New role tokens (consumed at TSX sites in Phase 5) === */
+  --accent-text:      var(--antique-bronze);  /* small-text accent links/CTAs */
+  --text-label:       var(--walnut);          /* functional eyebrows */
+  --text-label-light: var(--stone);           /* loose tag rows, light captions */
+  --focus-ring:       var(--antique-bronze);  /* applied below */
 
-  /* ===== Layout ===== */
-  --header-h:         64px;
-  --max-content:      1080px;
+  /* === Byzantine texture (for .ink-surface overlay at ~6% opacity) === */
+  --texture-byzantine: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><rect x='1' y='1' width='12' height='6' fill='%23C47A3A'/><rect x='15' y='1' width='12' height='6' fill='%237A4E14'/><rect x='1' y='9' width='8' height='6' fill='%23D4A06A'/><rect x='11' y='9' width='6' height='6' fill='%23A86628'/><rect x='19' y='9' width='8' height='6' fill='%237A4E14'/><rect x='1' y='17' width='10' height='6' fill='%23A86628'/><rect x='13' y='17' width='14' height='6' fill='%23C47A3A'/></svg>");
+
+  /* === Editorial-craft additions === */
+
+  /* Header height — used by hero viewport-fit calc.
+     Measured from current Header.tsx padding (18px top + 18px bottom + content ~28px) ≈ 64px.
+     Verify in DevTools if Header layout changes. */
+  --header-h: 64px;
+
+  /* Rule weights — adds exactly one new weight (2px amber chapter).
+     1px parchment hairline and 1px amber rule remain as-is. */
+  --rule-chapter-width:  64px;
+  --rule-chapter-height: 2px;
+
+  /* Editorial prose layout */
   --measure-prose:    65ch;
   --marginalia-width: 220px;
   --marginalia-gap:   32px;
 
-  /* ===== Brand textures ===== */
-  /* Paper grain: fractal-noise SVG baked at 22% alpha (multiply on ground). */
-  --paper-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='4'/><feColorMatrix values='0 0 0 0 0.55  0 0 0 0 0.42  0 0 0 0 0.22  0 0 0 0.22 0'/></filter><rect width='200' height='200' filter='url(%23g)'/></svg>");
-  --paper-grain-size: 240px 240px;
-  /* Byzantine tesserae texture for .ink-surface overlays at ~6% opacity. */
-  --texture-byzantine: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><rect x='1' y='1' width='12' height='6' fill='%23C47A3A'/><rect x='15' y='1' width='12' height='6' fill='%237A4E14'/><rect x='1' y='9' width='8' height='6' fill='%23D4A06A'/><rect x='11' y='9' width='6' height='6' fill='%23A86628'/><rect x='19' y='9' width='8' height='6' fill='%237A4E14'/><rect x='1' y='17' width='10' height='6' fill='%23A86628'/><rect x='13' y='17' width='14' height='6' fill='%23C47A3A'/></svg>");
+  /* Motion */
+  --ease-out-cubic:  cubic-bezier(0.33, 1, 0.68, 1);
+  --dur-reveal:      600ms;
+  --dur-transition:  300ms;
+
+  /* === Legacy aliases ===
+     Existing component CSS and inline TSX styles reference these names. They
+     remap onto the canonical Sarantium tokens with zero visible change so the
+     codebase keeps building during the Phase 2-5 migration. Removed in Phase 7. */
+  --color-cream:        var(--champagne);
+  --color-ink:          var(--ink);
+  --color-ink-mid:      var(--walnut);
+  --color-ink-muted:    var(--stone);
+  --color-amber:        var(--mosaic-gold);
+  --color-bone:         var(--parchment);
+  --color-deep:         var(--ink);          /* was #2e2016 — typo, consolidated */
+
+  --bg-page:        var(--champagne);
+  --bg-deep:        var(--ink);
+  --text-primary:   var(--ink);
+  --text-body:      var(--walnut);
+  --text-muted:     var(--stone);
+  --accent:         var(--mosaic-gold);
+  --accent-italic:  var(--mosaic-gold);
+  --accent-stat:    var(--mosaic-gold);
+  --border-rule:    var(--parchment);
+
+  --font-display-primitive: var(--font-playfair);
+  --font-body-primitive:    var(--font-sans);
+  --font-headline:          var(--font-playfair);
+  --font-text:              var(--font-sans);
+  --font-label:             var(--font-sans);
+
+  --text-size-display:   var(--fs-display);
+  --text-size-h1:        var(--fs-h1);
+  --text-size-h1-detail: var(--fs-h1-detail);
+  --text-size-h2:        var(--fs-h2);
+  --text-size-h3:        var(--fs-h3);
+  --text-size-subtitle:  18px;
+  --text-size-lede:      20px;
+  --text-size-card-h3:   20px;
+  --text-size-quote:     16px;
+  --text-size-body:      var(--fs-body);
+  --text-size-body-sm:   14px;
+  --text-size-small:     13px;
+  --text-size-xs:        12px;
+  --text-size-label:     11px;
+  --text-size-label-sm:  10px;
+  --text-size-eyebrow:   9px;
+
+  /* === card-scanner compatibility aliases =====================================
+     sarantium-site does not define these three names, but card-scanner consumes
+     --ground / --hair / --rule from this package :root. Keep them resolving to
+     the same hex values the old package tokens.css supplied. === */
+  --ground: var(--bg);
+  --hair:   var(--border);
+  --rule:   var(--border-strong);
 }
