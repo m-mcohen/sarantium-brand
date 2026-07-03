@@ -127,11 +127,11 @@ export const identity = {
   tagline: 'Stronger finance and operations through data strategy and automation.',
   domain: 'sarantium.co',
   siteUrl: 'https://sarantium.co',
-  email: 'mcohen@sarantium.co',
+  email: 'contact@sarantium.co',
   cal: 'michael-cohen',
   calUrl: 'https://cal.com/michael-cohen',
   location: 'Ft. Lauderdale, FL',
-  linkedin: 'https://linkedin.com/in/mmcohen',
+  linkedin: 'https://www.linkedin.com/company/sarantium/',
 };
 
 export const brand = {
