@@ -117,9 +117,9 @@
      Crimson Pro body (Renaissance, italic-preserved).
      JetBrains Mono (grotesque mono — eyebrows, code, table numerics).
      Primitives load via next/font/google in app/layout.tsx. */
-  --font-display:        var(--font-cinzel-google),         Georgia, serif;
-  --font-body:           var(--font-crimson-pro-google),    Georgia, serif;
-  --font-mono:           var(--font-jetbrains-mono-google), 'Consolas', monospace;
+  --font-display:        var(--font-cinzel-google, var(--font-cinzel, "Cinzel")),                  Georgia, serif;
+  --font-body:           var(--font-crimson-pro-google, var(--font-crimson, "Crimson Pro")),       Georgia, serif;
+  --font-mono:           var(--font-jetbrains-mono-google, var(--font-jetbrains, "JetBrains Mono")), 'Consolas', monospace;
 
   /* ─── Loop 4 · Component vocabulary (LOCKED 2026-05-28) ──────────── */
 
@@ -332,7 +332,9 @@
   /* === Font compositions (REMAPPED to D03 type stack) ===
      Primitives load via next/font/google in app/layout.tsx as
      --font-cinzel-google / --font-crimson-pro-google / --font-jetbrains-mono-google. */
-  --font-cinzel:   var(--font-display);     /* no-op — Cinzel always */
+  --font-cinzel:   var(--font-cinzel-google, "Cinzel"), Georgia, serif;  /* no-op — Cinzel always.
+     Direct chain (not var(--font-display)): --font-display's fallback now
+     references --font-cinzel, so aliasing back would create a var() cycle. */
   --font-playfair: var(--font-display);     /* HEADLINES NOW CINZEL */
   --font-sans:     var(--font-body);        /* BODY NOW CRIMSON PRO */
 

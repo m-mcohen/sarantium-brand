@@ -9,6 +9,7 @@ export declare const colors: {
   wine: string; wineLine: string; wineDeep: string;
   tile1: string; tile2: string; tile3: string; tile4: string;
   tileEmphasis1: string; tileEmphasis2: string; tileEmphasis3: string; tileEmphasis4: string;
+  success: string; successLine: string; successBg: string;
   champagne: string; mosaicGold: string; antiqueBronze: string;
   ink: string; walnut: string; stone: string; parchment: string;
 };
@@ -36,7 +37,7 @@ export interface WordmarkSpec {
 export declare const typeScale: {
   display: TypeSpec; h1: TypeSpec; h1Detail: TypeSpec; h2: TypeSpec; h3: TypeSpec;
   pull: TypeSpec; body: TypeSpec; bodyLg: TypeSpec; stat: TypeSpec;
-  eyebrow: TypeSpec; wordmark: WordmarkSpec;
+  eyebrow: TypeSpec; caption: TypeSpec; wordmark: WordmarkSpec;
 };
 
 export declare const spacing: Record<1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9, number>;
@@ -49,6 +50,7 @@ export declare const motion: {
 
 export declare const layout: {
   headerHeight: number;
+  maxContent: number;
   measureProse: string;
   marginaliaWidth: number;
   marginaliaGap: number;

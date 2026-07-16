@@ -30,6 +30,9 @@ export const colors = {
   tileEmphasis2:  '#C47A3A',  // T18.E-b
   tileEmphasis3:  '#8A2B36',  // T18.E-c
   tileEmphasis4:  '#4A1219',  // T18.E-d
+  success:        '#3F6B4A',  // restrained success green - confirmations only
+  successLine:    '#5E8A66',
+  successBg:      '#E8EEE4',
 
   // === Legacy aliases (values remapped to canonical) ===
   champagne:      '#F5F0E8',  // alias of bg
@@ -84,6 +87,7 @@ export const typeScale = {
   bodyLg:    { size: 17, lineHeight: 1.85, letterSpacing: 'normal'   },
   stat:      { size: 38, lineHeight: 1,    letterSpacing: '-0.01em' },
   eyebrow:   { size: 10, lineHeight: 1.4,  letterSpacing: '0.20em'  },
+  caption:   { size: 11, lineHeight: 1.4,  letterSpacing: 'normal'   },
   wordmark:  { sm: 14, md: 18, lg: 24, xl: 36, lineHeight: 1, letterSpacing: '0.08em' },
 };
 
@@ -115,6 +119,7 @@ export const motion = {
 /** Layout primitives (px unless noted). */
 export const layout = {
   headerHeight:    64,        // px - mirrors --header-h in globals.css
+  maxContent:      1080,      // px - mirrors --max-content
   measureProse:    '65ch',
   marginaliaWidth: 220,       // px
   marginaliaGap:   32,        // px
