@@ -31,10 +31,10 @@
   --color-body:         #3A3A3F;  /* body copy */
   --color-muted:        #5C5C60;  /* eyebrows, captions */
   --color-border:       #888B8E;  /* cool slate hairline */
-  --color-bronze:       #7A4E14;  /* antique bronze - strong rule / emphasis */
-  --color-gold:         #C47A3A;  /* primary accent (mosaic gold) */
-  --color-gold-line:    #D69846;  /* 1px gold lines */
-  --color-gold-deep:    #9C5018;  /* deep gold - links, emphasis */
+  --color-bronze:       #574425;  /* statuary bronze - strong rule / emphasis (D14) */
+  --color-gold:         #A4885B;  /* primary accent (statuary bronze, D14) */
+  --color-gold-line:    #9A7D4E;  /* 1px accent lines (D14) */
+  --color-gold-deep:    #6C542D;  /* deep bronze - links, emphasis (D14) */
   --color-wine:         #6E1F2A;  /* numerals / emphasis */
   --color-wine-line:    #8A2B36;  /* bright wine line */
   --color-wine-deep:    #5E1A24;  /* medium step from wine */
@@ -92,10 +92,10 @@
   --elevated:            #EBE6DC;   /* T6   cool-shifted cream (round-2 re-lock) */
   --soft:                #D8D2CA;   /* T7   pale stone (round-2 re-lock) */
   --border:              #888B8E;   /* T8   cool slate hairline */
-  --border-strong:       #7A4E14;   /* T9   Antique Bronze emphasis */
-  --gold:                #C47A3A;   /* T10  Mosaic Gold main */
-  --gold-line:           #D69846;   /* T11  bright gold for 1px lines */
-  --gold-deep:           #9C5018;   /* T12  Brick — red-leaning */
+  --border-strong:       #574425;   /* T9   statuary bronze emphasis (D14; was #7A4E14) */
+  --gold:                #A4885B;   /* T10  statuary bronze, decorative (D14; was #C47A3A) */
+  --gold-line:           #9A7D4E;   /* T11  1px rules, card hover (D14; was #D69846) */
+  --gold-deep:           #6C542D;   /* T12  links; APCA Lc 76.1 on champagne (D14; was #9C5018) */
   --gold-band:           color-mix(in oklab, var(--gold-line) 15%, transparent);  /* T13 */
   --wine:                #6E1F2A;   /* T14  baseline wine */
   --wine-line:           #8A2B36;   /* T15  bright wine line */
@@ -111,6 +111,40 @@
   --tile-emphasis-4:     #4A1219;   /* T18.E-d */
   --ink-band-bg:         var(--text);  /* T19  ink-band surface (topbar, footer) */
   --ink-band-fg:         var(--bg);    /* T20  ink-band foreground (wordmark, headline) */
+
+  /* ─── D14 · statuary bronze (adopted into the package 2026-08-28) ──
+     The accent ramp above moved off the amber-gold family for two measured
+     reasons, not taste:
+       1. the old --gold #C47A3A scored 18.7 on orange-proximity to #D97757,
+          the highest of any colour in the system. That family is rejected.
+       2. the old --gold-deep #9C5018, the colour of every inline link,
+          measured APCA Lc 70.3 against a 75 body target. It failed on its own.
+     Both share one cause: warm hue, high chroma, too light. Above OKLCH hue 70
+     the orange family is unreachable at any chroma, so the ramp moved to hue
+     ~78 and shed about a third of its chroma. Every step scores
+     orange-proximity 0.0. Measured on champagne #F5F0E8 (Lc = APCA; 75 body,
+     45 large/bold):
+       --gold          #A4885B  hue 78.9  Lc 52.4  decorative only
+       --gold-line     #9A7D4E  hue 78.8  Lc 57.5  1px rules, card hover
+       --gold-deep     #6C542D  hue 78.3  Lc 76.1  PASSES body; links
+       --border-strong #574425  hue 78.6  Lc 82.8  strong rules, focus
+
+     This shipped first in sarantium-site (2026-08-06) scoped to one brand,
+     which left michaelcohen.bio on the rejected ramp. It is promoted here so
+     the ramp cannot diverge again. A consumer that wants the old amber
+     re-declares the four tokens in its own :root — sarantiumventures.com does
+     exactly that, to keep the bronze it chose independently in July.
+
+     ─── D14b · the on-ink lift ───
+     --gold-line does double duty: 1px rules on light grounds AND the marks on
+     a dark ink band (topbar hairline, current-page brackets, CTA pill fill).
+     The statuary bronze is right on champagne and wrong on ink: measured
+     against #15161A it falls from Lc 52.4 to 34.6, and an ink label on that
+     fill falls from Lc 54.1 to 36.7. So the dark chrome gets its own lifted
+     step. CTA label lands at Lc 63.0 (was 54.1); hover deepens one step to
+     Lc 54.0, keeping the darken-on-press direction. */
+  --onink-accent:        #CDB284;   /* accent that reads on an ink ground */
+  --onink-accent-hover:  #BAA176;   /* one step down, for press/hover */
 
   /* ─── Loop 3 · Type stack (LOCKED 2026-05-27) ────────────────────── */
   /* Cinzel display (Roman caps, no italic, no lowercase glyphs).
