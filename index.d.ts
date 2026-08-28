@@ -6,6 +6,7 @@ export declare const colors: {
   surface: string; elevated: string; soft: string;
   border: string; borderStrong: string;
   gold: string; goldLine: string; goldDeep: string;
+  oninkAccent: string; oninkAccentHover: string;
   wine: string; wineLine: string; wineDeep: string;
   tile1: string; tile2: string; tile3: string; tile4: string;
   tileEmphasis1: string; tileEmphasis2: string; tileEmphasis3: string; tileEmphasis4: string;

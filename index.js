@@ -15,13 +15,15 @@ export const colors = {
   elevated:       '#EBE6DC',  // T6   cool-shifted cream
   soft:           '#D8D2CA',  // T7   pale stone
   border:         '#888B8E',  // T8   cool slate hairline
-  borderStrong:   '#7A4E14',  // T9   Antique Bronze emphasis
-  gold:           '#C47A3A',  // T10  Mosaic Gold main
-  goldLine:       '#D69846',  // T11  bright gold for 1px lines
-  goldDeep:       '#9C5018',  // T12  Brick - red-leaning
+  borderStrong:   '#574425',  // T9   statuary bronze emphasis (D14; was #7A4E14)
+  gold:           '#A4885B',  // T10  statuary bronze, decorative (D14; was #C47A3A)
+  goldLine:       '#9A7D4E',  // T11  1px rules, card hover (D14; was #D69846)
+  goldDeep:       '#6C542D',  // T12  links; APCA Lc 76.1 on champagne (D14; was #9C5018)
   wine:           '#6E1F2A',  // T14
   wineLine:       '#8A2B36',  // T15
   wineDeep:       '#5E1A24',  // T16
+  oninkAccent:      '#CDB284',  // D14b accent that reads on an ink ground
+  oninkAccentHover: '#BAA176',  // D14b one step down, for press/hover
   tile1:          '#E0DDD0',  // T18.C-a Range C lightest
   tile2:          '#C0BFB2',  // T18.C-b
   tile3:          '#94978D',  // T18.C-c
@@ -36,8 +38,8 @@ export const colors = {
 
   // === Legacy aliases (values remapped to canonical) ===
   champagne:      '#F5F0E8',  // alias of bg
-  mosaicGold:     '#C47A3A',  // alias of gold
-  antiqueBronze:  '#7A4E14',  // alias of borderStrong
+  mosaicGold:     '#A4885B',  // alias of gold
+  antiqueBronze:  '#574425',  // alias of borderStrong
   ink:            '#15161A',  // COOL INK SHIFT - was '#2D2016'
   walnut:         '#3A3A3F',  // alias of text2 - was warm '#6B5440'
   stone:          '#5C5C60',  // alias of muted - was warm '#9A8570'
