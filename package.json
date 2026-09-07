@@ -1,7 +1,7 @@
 {
   "name": "@sarantium/brand",
-  "version": "0.3.0",
-  "description": "Canonical Sarantium design tokens (palette, type scale, spacing, motion, layout) plus a Tailwind v4 theme. Single source of truth for sarantium-site, 5-day-close, and card-scanner.",
+  "version": "0.4.0",
+  "description": "Canonical Sarantium design tokens (palette, type scale, spacing, motion, layout) plus a Tailwind v4 theme and the sarantium-design skill. Single source of truth for sarantium-site, 5-day-close, and card-scanner.",
   "type": "module",
   "license": "UNLICENSED",
   "private": true,
