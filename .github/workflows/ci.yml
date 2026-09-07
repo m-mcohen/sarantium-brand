@@ -1,0 +1,39 @@
+# Gate: skill/brand.css must be a current build of tokens.css.
+#
+# This repo previously had no CI, because a token package that ships no code has
+# little to test. The design skill changes that: skill/brand.css is DERIVED from
+# tokens.css, and a derived file that nothing checks is the exact artifact that
+# spent nine days teaching the palette D14 was created to eliminate.
+#
+# The gate is cheap because the generator, its source, and its output are all in
+# THIS repo. sarantium-site's PR #106 built the same check but had to write into
+# ~/.claude/skills/, outside every repo, where no CI could see it. That is the
+# hole this placement closes.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  brand-css-is-current:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # skill:build stamps the commit that last touched tokens.css, so the
+          # check needs real history. A shallow clone would stamp "unknown" and
+          # the comparison would fail for a reason that has nothing to do with
+          # the palette.
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # No install step: the generator uses only node: builtins, and the package
+      # has no runtime dependencies. Adding `npm ci` here would buy nothing and
+      # cost a lockfile-drift failure mode.
+      - name: brand.css matches tokens.css
+        run: npm run skill:check

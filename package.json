@@ -20,7 +20,8 @@
     "index.js",
     "index.d.ts",
     "tokens.css",
-    "README.md"
+    "README.md",
+    "skill"
   ],
   "sideEffects": [
     "*.css"
@@ -30,5 +31,9 @@
     "design-tokens",
     "tailwind",
     "brand"
-  ]
+  ],
+  "scripts": {
+    "skill:build": "node scripts/build-skill-css.mjs",
+    "skill:check": "node scripts/build-skill-css.mjs --check"
+  }
 }

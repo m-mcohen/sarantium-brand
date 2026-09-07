@@ -21,6 +21,43 @@ wine accents, sharp corners, hairline borders, flat) with **Cinzel** (display),
 |---|---|
 | `tokens.css` | Tailwind v4 `@theme` (color + font utilities) plus a `:root` block of extended tokens (type scale, spacing, motion, layout, textures) and back-compat aliases. |
 | `index.js` / `index.d.ts` | The same tokens as a typed JS object, for non-CSS consumers (PDF renderers, inline styles, server code). |
+| `skill/` | The `sarantium-design` skill: palette roles, type, voice, composition, motion, the mark, and the mockup-round process. See below. |
+
+## The design skill
+
+`skill/` holds the canonical Sarantium design system as a Claude Code skill. It
+lives **here, beside `tokens.css`**, for one reason: a rules file that sits in a
+different repo from the values it describes will drift, and this one already did.
+
+The previous `sarantium-design` skill kept a hand-copied palette in
+`~/.claude/skills/`. It resynced 2026-08-19; the D14 statuary-bronze ramp landed
+2026-08-28; on 2026-09-03 it still taught `--gold #C47A3A` and `--gold-deep
+#9C5018`, the two values D14 existed to eliminate. Nine days from its own resync,
+and no CI anywhere could see it. It was retired 2026-09-07.
+
+What is different here:
+
+- **`skill/SKILL.md` contains no hex values at all.** It teaches token *names* and
+  *roles*. There is nothing in it that can go stale when the palette moves.
+- **`skill/brand.css` is generated** from `tokens.css`, stamped with its source
+  commit, and gated in CI. It exists for artifacts built outside a consumer repo
+  (slides, OG images, one-pagers, throwaway mockups) that have no package install.
+- **A rule change and its token change land in one commit**, because both files are
+  here.
+
+```
+npm run skill:build    regenerate skill/brand.css from tokens.css
+npm run skill:check    report drift, exit 1, write nothing
+```
+
+CI runs `skill:check` on every push and PR. Run `skill:build` after any change to
+`tokens.css` and commit the result.
+
+**Consumers need a pointer.** Claude Code only discovers skills in
+`~/.claude/skills/` or `<repo>/.claude/skills/`, so each consumer copies
+`skill/pointer-template.md` to `<repo>/.claude/skills/sarantium-design/SKILL.md`.
+The pointer carries only rules that are not derived from token values; everything
+else is read from the vendored package. See `skill/CONSUMER-POINTER.md`.
 
 ## Install
 
